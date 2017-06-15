@@ -70,7 +70,7 @@ In the controller where you want to use the form, instantiate the new form in yo
       @post_form = submit(PostForm, @post, post_params)
 
       if @post_form.valid?
-        redirect_to admin_post_url(@post_form)
+        redirect_to post_url(@post_form)
       else
         render :new
       end
@@ -80,7 +80,7 @@ In the controller where you want to use the form, instantiate the new form in yo
       @post_form = submit(PostForm, @post, post_params)
 
       if @post_form.valid?
-        redirect_to admin_post_url(@post_form)
+        redirect_to post_url(@post_form)
       else
         render :edit
       end
