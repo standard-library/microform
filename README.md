@@ -1,7 +1,7 @@
 # Microform
 
 [![Build Status](https://travis-ci.org/standard-library/microform.svg?branch=master)](https://travis-ci.org/standard-library/microform)
-![Gem Version](https://badge.fury.io/rb/microform.svg)](https://badge.fury.io/rb/microform)
+[![Gem Version](https://badge.fury.io/rb/microform.svg)](https://badge.fury.io/rb/microform)
 
 Microform creates forms for you to use in your Rails 5+ applications, minimally applying the form object pattern.
 
@@ -85,7 +85,7 @@ Then, in the controller where you want to use the form, instantiate the new form
 
 The form objects are duck-typed to quack like the model instance by leveraging the `method_missing` method. So if you have simple model without complicated attributes, then you can probably use Microform right out of the box.
 
-If your model does have complicated attributes, then you will probably want to go into the generated form and tweak the `submit` method. 
+If your model does have complicated attributes, then you will probably want to go into the generated form and tweak the `submit` method.
 
 ## Development
 
