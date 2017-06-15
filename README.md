@@ -1,6 +1,7 @@
 # Microform
 
 [![Build Status](https://travis-ci.org/standard-library/microform.svg?branch=master)](https://travis-ci.org/standard-library/microform)
+![Gem Version](https://badge.fury.io/rb/microform.svg)](https://badge.fury.io/rb/microform)
 
 Microform creates forms for you to use in your Rails 5+ applications, minimally applying the form object pattern.
 
