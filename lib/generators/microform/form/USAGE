@@ -1,0 +1,8 @@
+Description:
+    Explain the generator
+
+Example:
+    rails generate form Name
+
+    This will create:
+        app/forms/#{Name}_form.rb
