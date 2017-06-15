@@ -83,6 +83,10 @@ Then, in the controller where you want to use the form, instantiate the new form
   end
 ```
 
+The form objects are duck-typed to quack like the model instance by leveraging the `method_missing` method. So if you have simple model without complicated attributes, then you can probably use Microform right out of the box.
+
+If your model does have complicated attributes, then you will probably want to go into the generated form and tweak the `submit` method. 
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
