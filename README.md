@@ -21,6 +21,73 @@ Or install it yourself as:
 
     $ gem install microform
 
+## Usage
+
+ The `Microform::Submission` module provides a `submit` method that will help to better isolate your form tests. Include it in the relevant controller for your form(s):
+
+```ruby
+  class ApplicationController < ActionController::Base
+    include Microform::Submission
+  end
+```
+
+A generated Microform form provides an interface that initializes a record and defines a submit method:
+
+
+```ruby
+  class PostForm
+    attr_reader :post
+
+    def initialize(post)
+      @post = post
+    end
+
+    def submit(changeset)
+      post.assign_attributes(changeset)
+      return false unless valid?
+      post.save
+    end
+  end
+  ```
+
+Since methods are passed to the record in the form, you can use form object in your views and can supply the form to Rails' form helpers directly.
+
+In the controller where you want to use the form, instantiate the new form in your actions with a record. You can save the record using the `submit` method, providing the form name, record, and changeset:
+
+```ruby
+  class PostsController < ApplicationController
+    def new
+      @post = Post.new
+      @post_form = PostForm.new(@post)
+    end
+
+    def edit
+      @post_form = PostForm.new(@post)
+    end
+
+    def create
+      @post = Post.new
+      @post_form = submit(PostForm, @post, post_params)
+
+      if @post_form.valid?
+        redirect_to admin_post_url(@post_form)
+      else
+        render :new
+      end
+    end
+
+    def update
+      @post_form = submit(PostForm, @post, post_params)
+
+      if @post_form.valid?
+        redirect_to admin_post_url(@post_form)
+      else
+        render :edit
+      end
+    end
+  end
+```
+
 ## Generating Forms
 
 Generate a form for your model, with accompanying tests:
@@ -30,62 +97,6 @@ Generate a form for your model, with accompanying tests:
 ```
 
 This will create two files: `app/forms/model_name_form.rb` and `test/forms/model_name_test.rb`.
-
-## Usage
-
- The `Microform::Submission` module provides a `submit` method that will help to better isolate your form tests. Include it in the relevant controller for your form(s):
-
-```ruby
-  class AdminController < ApplicationController
-    include Microform::Submission
-  end
-```
-
-Then, in the controller where you want to use the form, instantiate the new form in your actions with a model instance. You can save or update attributes using the `submit` method, providing the form name, instance, and the parameters:
-
-```ruby
-  def new
-    @post = Post.new
-    @post_form = PostForm.new(@post)
-  end
-
-  def edit
-    @post_form = PostForm.new(@post)
-  end
-
-  def create
-    @post = Post.new
-    @post_form = submit(PostForm, @post, post_params)
-
-    respond_to do |format|
-      if @post_form.valid?
-        format.html { redirect_to admin_post_url(@post_form), notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post_form }
-      else
-        format.html { render :new }
-        format.json { render json: @post_form.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def update
-    @post_form = submit(PostForm, @post, post_params)
-
-    respond_to do |format|
-      if @post_form.valid?
-        format.html { redirect_to admin_post_url(@post_form), notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @post_form }
-      else
-        format.html { render :edit }
-        format.json { render json: @post_form.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-```
-
-The form objects are duck-typed to quack like the model instance by leveraging the `method_missing` method. So if you have simple model without complicated attributes, then you can probably use Microform right out of the box.
-
-If your model does have complicated attributes, then you will probably want to go into the generated form and tweak the `submit` method.
 
 ## Development
 
