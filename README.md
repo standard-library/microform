@@ -2,9 +2,7 @@
 
 [![Build Status](https://travis-ci.org/standard-library/microform.svg?branch=master)](https://travis-ci.org/standard-library/microform)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/microform`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Microform creates forms for you to use in your Rails 5+ applications, minimally applying the form object pattern.
 
 ## Installation
 
@@ -22,9 +20,67 @@ Or install it yourself as:
 
     $ gem install microform
 
+## Generating Forms
+
+Generate a form for your model, with accompanying tests:
+
+```
+  rails g microform:form model_name
+```
+
+This will create two files: `app/forms/model_name_form.rb` and `test/forms/model_name_test.rb`.
+
 ## Usage
 
-TODO: Write usage instructions here
+ The `Microform::Submission` module provides a `submit` method that will help to better isolate your form tests. Include it in the relevant controller for your form(s):
+
+```ruby
+  class AdminController < ApplicationController
+    include Microform::Submission
+  end
+```
+
+Then, in the controller where you want to use the form, instantiate the new form in your actions with a model instance. You can save or update attributes using the `submit` method, providing the form name, instance, and the parameters:
+
+```ruby
+  def new
+    @post = Post.new
+    @post_form = PostForm.new(@post)
+  end
+
+  def edit
+    @post_form = PostForm.new(@post)
+  end
+
+  def create
+    @post = Post.new
+    @post_form = submit(PostForm, @post, post_params)
+
+    respond_to do |format|
+      if @post_form.valid?
+        format.html { redirect_to admin_post_url(@post_form), notice: 'Post was successfully created.' }
+        format.json { render :show, status: :created, location: @post_form }
+      else
+        format.html { render :new }
+        format.json { render json: @post_form.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    @post_form = submit(PostForm, @post, post_params)
+
+    respond_to do |format|
+      if @post_form.valid?
+        format.html { redirect_to admin_post_url(@post_form), notice: 'Post was successfully updated.' }
+        format.json { render :show, status: :ok, location: @post_form }
+      else
+        format.html { render :edit }
+        format.json { render json: @post_form.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+```
 
 ## Development
 
@@ -34,7 +90,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/microform. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/standard-library/microform. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
