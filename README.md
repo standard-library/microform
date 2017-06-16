@@ -1,10 +1,9 @@
 # Microform
 
 [![Build Status](https://travis-ci.org/standard-library/microform.svg?branch=master)](https://travis-ci.org/standard-library/microform)
+[![Gem Version](https://badge.fury.io/rb/microform.svg)](https://badge.fury.io/rb/microform)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/microform`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Microform creates forms for you to use in your Rails 5+ applications, minimally applying the form object pattern.
 
 ## Installation
 
@@ -24,7 +23,79 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+ The `Microform::Submission` is a controller mixin. It provides a `submit` method that will better isolate your form tests by allowing form submission to be easily stubbed out in controller tests. Include it in the relevant controller for your form(s):
+
+```ruby
+  class ApplicationController < ActionController::Base
+    include Microform::Submission
+  end
+```
+
+A generated Microform form provides an interface that initializes a record and defines a submit method:
+
+```ruby
+  class PostForm
+    attr_reader :post
+
+    def initialize(post)
+      @post = post
+    end
+
+    def submit(changeset)
+      post.assign_attributes(changeset)
+      return false unless valid?
+      post.save
+    end
+  end
+  ```
+
+Since methods are passed to the record in the form, you can use the form object in your views and can supply the form to Rails' form helpers directly.
+
+In the controller where you want to use the form, instantiate the new form in your actions with a record. You can save the record using the `submit` method, providing the form name, record, and changeset:
+
+```ruby
+  class PostsController < ApplicationController
+    def new
+      @post = Post.new
+      @post_form = PostForm.new @post
+    end
+
+    def edit
+      @post_form = PostForm.new @post
+    end
+
+    def create
+      @post = Post.new
+      @post_form = submit PostForm, @post, post_params
+
+      if @post_form.valid?
+        redirect_to post_url @post_form
+      else
+        render :new
+      end
+    end
+
+    def update
+      @post_form = submit PostForm, @post, post_params
+
+      if @post_form.valid?
+        redirect_to post_url @post_form
+      else
+        render :edit
+      end
+    end
+  end
+```
+
+## Generating Forms
+
+Generate a form for your model, with accompanying tests:
+
+```
+  rails g microform:form model_name
+```
+
+This will create two files: `app/forms/model_name_form.rb` and `test/forms/model_name_test.rb`.
 
 ## Development
 
@@ -34,7 +105,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/microform. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/standard-library/microform. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
