@@ -34,9 +34,7 @@ class PostForm
   end
 
   def submit(changeset)
-    post.assign_attributes(changeset)
-    return false unless valid?
-    post.save
+    post.update(changeset)
   end
 end
 ```
@@ -61,6 +59,7 @@ class PostsController < ApplicationController
   end
 
   def edit
+    @post = Post.find(params[:id])
     @post_form = PostForm.new @post
   end
 
@@ -76,6 +75,7 @@ class PostsController < ApplicationController
   end
 
   def update
+    @post = Post.find(params[:id])
     @post_form = submit PostForm, @post, post_params
 
     if @post_form.valid?
@@ -84,6 +84,12 @@ class PostsController < ApplicationController
       render :edit
     end
   end
+  
+  private
+  
+    def post_params
+      params.require(:post).permit(:title, :body)
+    end
 end
 ```
 
