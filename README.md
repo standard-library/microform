@@ -57,29 +57,29 @@ In the controller where you want to use the form, instantiate the new form in yo
   class PostsController < ApplicationController
     def new
       @post = Post.new
-      @post_form = PostForm.new(@post)
+      @post_form = PostForm.new @post
     end
 
     def edit
-      @post_form = PostForm.new(@post)
+      @post_form = PostForm.new @post
     end
 
     def create
       @post = Post.new
-      @post_form = submit(PostForm, @post, post_params)
+      @post_form = submit PostForm, @post, post_params
 
       if @post_form.valid?
-        redirect_to post_url(@post_form)
+        redirect_to post_url @post_form
       else
         render :new
       end
     end
 
     def update
-      @post_form = submit(PostForm, @post, post_params)
+      @post_form = submit PostForm, @post, post_params
 
       if @post_form.valid?
-        redirect_to post_url(@post_form)
+        redirect_to post_url @post_form
       else
         render :edit
       end
