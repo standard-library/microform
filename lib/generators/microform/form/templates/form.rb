@@ -1,6 +1,10 @@
 class <%= file_name.capitalize %>Form
   attr_reader :<%= file_name %>
 
+  delegate :persisted?, to: :<%= file_name %>
+  delegate :to_model, to: :<%= file_name %>
+  delegate :to_param, to: :<%= file_name %>
+
   def initialize(<%= file_name %>)
     @<%= file_name %> = <%= file_name %>
   end
@@ -9,14 +13,6 @@ class <%= file_name.capitalize %>Form
     <%= file_name %>.assign_attributes(changeset)
     return false unless valid?
     <%= file_name %>.save
-  end
-
-  def persisted?
-    <%= file_name %>.persisted?
-  end
-
-  def to_model
-    <%= file_name %>
   end
 
   def method_missing(method, *args)
