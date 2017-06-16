@@ -26,19 +26,19 @@ Or install it yourself as:
 A Microform form provides an interface that initializes with a record and defines a submit method:
 
 ```ruby
-  class PostForm
-    attr_reader :post
+class PostForm
+  attr_reader :post
 
-    def initialize(post)
-      @post = post
-    end
-
-    def submit(changeset)
-      post.assign_attributes(changeset)
-      return false unless valid?
-      post.save
-    end
+  def initialize(post)
+    @post = post
   end
+
+  def submit(changeset)
+    post.assign_attributes(changeset)
+    return false unless valid?
+    post.save
+  end
+end
 ```
 
 Since methods are passed to the record in the form, you can use the form object in your views and can supply the form to Rails' form helpers directly.
@@ -46,45 +46,45 @@ Since methods are passed to the record in the form, you can use the form object 
 `Microform::Submission` is a controller mixin. It provides a `submit` method that will better isolate your form tests by allowing form submission to be easily stubbed out in controller tests. Include it in the relevant controller for your form(s):
 
 ```ruby
-  class ApplicationController < ActionController::Base
-    include Microform::Submission
-  end
+class ApplicationController < ActionController::Base
+  include Microform::Submission
+end
 ```
 
 In the controller where you want to use the form, instantiate the new form in your actions with a record. You can save the record using the `submit` method, providing the form class, record, and changeset:
 
 ```ruby
-  class PostsController < ApplicationController
-    def new
-      @post = Post.new
-      @post_form = PostForm.new @post
-    end
+class PostsController < ApplicationController
+  def new
+    @post = Post.new
+    @post_form = PostForm.new @post
+  end
 
-    def edit
-      @post_form = PostForm.new @post
-    end
+  def edit
+    @post_form = PostForm.new @post
+  end
 
-    def create
-      @post = Post.new
-      @post_form = submit PostForm, @post, post_params
+  def create
+    @post = Post.new
+    @post_form = submit PostForm, @post, post_params
 
-      if @post_form.valid?
-        redirect_to post_url @post_form
-      else
-        render :new
-      end
-    end
-
-    def update
-      @post_form = submit PostForm, @post, post_params
-
-      if @post_form.valid?
-        redirect_to post_url @post_form
-      else
-        render :edit
-      end
+    if @post_form.valid?
+      redirect_to post_url @post_form
+    else
+      render :new
     end
   end
+
+  def update
+    @post_form = submit PostForm, @post, post_params
+
+    if @post_form.valid?
+      redirect_to post_url @post_form
+    else
+      render :edit
+    end
+  end
+end
 ```
 
 ## Generating Forms
@@ -92,7 +92,7 @@ In the controller where you want to use the form, instantiate the new form in yo
 Generate a form for your model, with accompanying tests:
 
 ```
-  rails g microform:form model_name
+rails g microform:form model_name
 ```
 
 This will create two files: `app/forms/model_name_form.rb` and `test/forms/model_name_test.rb`.
