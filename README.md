@@ -23,15 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
- The `Microform::Submission` is a controller mixin. It provides a `submit` method that will better isolate your form tests by allowing form submission to be easily stubbed out in controller tests. Include it in the relevant controller for your form(s):
-
-```ruby
-  class ApplicationController < ActionController::Base
-    include Microform::Submission
-  end
-```
-
-A generated Microform form provides an interface that initializes a record and defines a submit method:
+A Microform form provides an interface that initializes with a record and defines a submit method:
 
 ```ruby
   class PostForm
@@ -47,11 +39,19 @@ A generated Microform form provides an interface that initializes a record and d
       post.save
     end
   end
-  ```
+```
 
 Since methods are passed to the record in the form, you can use the form object in your views and can supply the form to Rails' form helpers directly.
 
-In the controller where you want to use the form, instantiate the new form in your actions with a record. You can save the record using the `submit` method, providing the form name, record, and changeset:
+`Microform::Submission` is a controller mixin. It provides a `submit` method that will better isolate your form tests by allowing form submission to be easily stubbed out in controller tests. Include it in the relevant controller for your form(s):
+
+```ruby
+  class ApplicationController < ActionController::Base
+    include Microform::Submission
+  end
+```
+
+In the controller where you want to use the form, instantiate the new form in your actions with a record. You can save the record using the `submit` method, providing the form class, record, and changeset:
 
 ```ruby
   class PostsController < ApplicationController
