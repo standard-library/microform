@@ -49,7 +49,7 @@ A generated Microform form provides an interface that initializes a record and d
   end
   ```
 
-Since methods are passed to the record in the form, you can use form object in your views and can supply the form to Rails' form helpers directly.
+Since methods are passed to the record in the form, you can use the form object in your views and can supply the form to Rails' form helpers directly.
 
 In the controller where you want to use the form, instantiate the new form in your actions with a record. You can save the record using the `submit` method, providing the form name, record, and changeset:
 
