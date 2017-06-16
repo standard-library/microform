@@ -23,7 +23,7 @@ Or install it yourself as:
 
 ## Usage
 
- The `Microform::Submission` module provides a `submit` method that will help to better isolate your form tests. Include it in the relevant controller for your form(s):
+ The `Microform::Submission` is a controller mixin. It provides a `submit` method that will better isolate your form tests by allowing form submission to be easily stubbed out in controller tests. Include it in the relevant controller for your form(s):
 
 ```ruby
   class ApplicationController < ActionController::Base
@@ -32,7 +32,6 @@ Or install it yourself as:
 ```
 
 A generated Microform form provides an interface that initializes a record and defines a submit method:
-
 
 ```ruby
   class PostForm
