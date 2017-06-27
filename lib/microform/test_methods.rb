@@ -7,6 +7,9 @@ module Microform
       controller = self.class.name.gsub(/Test\z/, "").constantize
       form = form_kind.new OpenStruct.new(foo: :bar)
 
+      # Mangle the variable names to circumvent any issues with method
+      # collisions when the `submit` lambda is instance eval'ed within
+      # the controller.
       __microform_form_kind = form_kind
       __microform_test = self
       __microform_stub = stub
