@@ -127,14 +127,14 @@ Other tests could cover submitting certain attributes and ensuring that the reco
 
 Using the form object pattern allows you to extract tests that cover updating records from your controller/integration tests. This keeps the tests that cover your controllers and routing focussed on those concerns specifically. If code is introduced that breaks form submission, only the form object tests will fail, making your application easier to debug.
 
-Microform provides a `Microform::TestMethods` module for asserting and stubbing form submissions with Minitest.
+Microform provides a `Microform::Test::IntegrationMethods` module for asserting and stubbing form submissions with Minitest.
 
 ```ruby
 require 'test_helper'
 require 'microform/test_methods'
 
 class Admin::ProjectsControllerTest < ActionDispatch::IntegrationTest
-  include Microform::TestMethods
+  include Microform::Test::IntegrationMethods
 
   test "should create post" do
     post = posts(:one)

@@ -30,7 +30,7 @@ class TestMethodsTest < Minitest::Test
   end
 
   class FooControllerTest < Minitest::Test
-    include Microform::TestMethods
+    include Microform::Test::IntegrationMethods
   end
 
   class FooController
