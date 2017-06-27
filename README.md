@@ -134,6 +134,8 @@ require 'test_helper'
 require 'microform/test_methods'
 
 class Admin::ProjectsControllerTest < ActionDispatch::IntegrationTest
+  include Microform::TestMethods
+
   test "should create post" do
     post = posts(:one)
     valid_double = OpenStruct.new(post: post)
