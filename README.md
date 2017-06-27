@@ -84,9 +84,9 @@ class PostsController < ApplicationController
       render :edit
     end
   end
-  
+
   private
-  
+
     def post_params
       params.require(:post).permit(:title, :body)
     end
@@ -102,6 +102,53 @@ rails g microform:form model_name
 ```
 
 This will create two files: `app/forms/model_name_form.rb` and `test/forms/model_name_test.rb`.
+
+## Testing
+
+### Forms
+
+Because form objects are plain Ruby objects, you can test them without much fuss. The first test you might write is submitting a form with no new attributes provided. Because the `submit` method returns a boolean, you can pass the return value directly to `assert`.
+
+```ruby
+class PostFormTest < ActiveSupport::TestCase
+  test "should submit form" do
+    post = posts(:one)
+    changeset = {}
+    form = PostForm.new(post)
+
+    assert form.submit(changeset)
+  end
+end
+```
+
+Other tests could cover submitting certain attributes and ensuring that the record is updated correctly.
+
+### Controllers
+
+Using the form object pattern allows you to extract tests that cover updating records from your controller/integration tests. This keeps the tests that cover your controllers and routing focussed on those concerns specifically. If code is introduced that breaks form submission, only the form object tests will fail, making your application easier to debug.
+
+Microform provides a `Microform::TestMethods` module for asserting and stubbing form submissions.
+
+```ruby
+require 'test_helper'
+require 'microform/test_methods'
+
+class Admin::ProjectsControllerTest < ActionDispatch::IntegrationTest
+  test "should create post" do
+    post = posts(:one)
+    valid_double = OpenStruct.new(post: post)
+
+    assert_submits PostForm, stub: valid_double do
+      post posts_url, params: { title: "Foo" }
+      # ^ params must still be valid for strong_params, but they are not used
+      #   if the form object has been stubbed, as in this example.
+      assert_redirected_to posts_url(post)
+    end
+  end
+end
+```
+
+The `stub` value specifies a return value from the controller's `submit` method. This is optional, and you may omit it in the case that you want the original behavior to be run but still assert that a specific kind of form was submitted.
 
 ## Development
 
