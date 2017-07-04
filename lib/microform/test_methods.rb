@@ -14,8 +14,10 @@ module Microform
         __microform_form_kind = form_kind
         __microform_test = self
         __microform_stub = stub
+        __microform_submitted = false
 
         submit = -> f, *args {
+          __microform_submitted = true
           __microform_test.assert_equal __microform_form_kind, f
 
           if __microform_stub
@@ -28,6 +30,9 @@ module Microform
         controller.stub_any_instance :submit, submit do
           yield form
         end
+
+        assert __microform_submitted,
+               "Expected #{controller} to submit a #{form_kind}"
       end
     end
 

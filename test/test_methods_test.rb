@@ -11,6 +11,19 @@ class TestMethodsTest < Minitest::Test
     end
   end
 
+  def test_asserts_controller_submits_at_all
+    runner = FooControllerTest.new :foo
+
+    error = assert_raises MiniTest::Assertion do
+      runner.assert_submits FooForm do
+      end
+    end
+
+    assert_equal <<~EXPECTED.chomp, error.message
+      Expected TestMethodsTest::FooController to submit a TestMethodsTest::FooForm
+    EXPECTED
+  end
+
   def test_returns_original_form_from_submission
     runner = FooControllerTest.new :foo
     runner.assert_submits FooForm do
