@@ -3,7 +3,21 @@
 [![Build Status](https://travis-ci.org/standard-library/microform.svg?branch=master)](https://travis-ci.org/standard-library/microform)
 [![Gem Version](https://badge.fury.io/rb/microform.svg)](https://badge.fury.io/rb/microform)
 
-Microform creates forms for you to use in your Rails 5+ applications, minimally applying the form object pattern.
+Microform cleans up controller actions in your Rails 5+ applications, minimally applying the form object pattern.
+
+The goal of Microform is to encapsulate the form submission transaction. While other form object libraries have a broader scope, Microform focuses only on:
+
+* Presenting records to views
+* Processing submitted form data
+
+Microfrom doesn't explicitly handle:
+
+* Validations
+* Rendering inputs
+* Filtering parameters (`strong_params`)
+* Anything else
+
+Without these, the API for Microform can remain small (one controller method to remember), use plain old Ruby objects (without inheritance) that are easy to test and maintain. Even though Microform doesn't offer an opinion about the non-goals, it is possible to extend the basic Microform pattern to include them where it makes sense to in your application.
 
 ## Installation
 
